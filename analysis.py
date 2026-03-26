@@ -51,7 +51,20 @@ def find_props(smiles):
         return 'mol is None'
     
     props_of_mol = QED.properties(mol)
-    return props_of_mol, inchi_of_mol
+    message = (
+        f'Молярная масса: {props_of_mol[0]} \n'
+        f'Липофильность: {props_of_mol[1]} \n'
+        f'Акцепторы H-связи: {props_of_mol[2]} \n'
+        f'Доноры H-связи: {props_of_mol[3]} \n'
+        f'Полярная площадь: {props_of_mol[4]} \n'
+        f'Вращающиеся связи: {props_of_mol[5]} \n'
+        f'Ароматические кольца: {props_of_mol[6]} \n'
+        f'Структурные алармы: {props_of_mol[7]}'
+        
+    )
+    # print(props_of_mol)
+    # print(message)
+    return message
 
 def smiles_to_png(smiles):
     '''
@@ -71,4 +84,4 @@ def smiles_to_png(smiles):
 
 
 # smiles_to_png('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O').save('test.png')
-# print(find_props('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O'))
+print(find_props('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O'))
