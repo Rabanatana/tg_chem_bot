@@ -13,6 +13,7 @@
 from rdkit import Chem
 from rdkit.Chem import QED
 from rdkit.Chem import Draw
+from pathlib import Path
 
 def smiles_to_mol(smiles):
     '''
@@ -20,6 +21,27 @@ def smiles_to_mol(smiles):
     '''
     
     return Chem.MolFromSmiles(smiles)
+
+def file_availability(filename, folder):
+    '''
+    Функция для проверки наличия файла в папке
+    
+    Принимает:
+    
+    filename (str): название файла
+    
+    folder (str): папка, в которой может находиться файл
+    
+    Возвращает:
+    
+    True - файл есть
+    
+    False - файла нет
+    '''
+    
+    if Path(f'{folder}/{filename}').is_file():
+        return True
+    return False
 
 def find_props(smiles):
     '''
@@ -48,6 +70,7 @@ def find_props(smiles):
     mol = smiles_to_mol(smiles)
     inchi_of_mol = Chem.MolToInchi(mol)
     if mol is None:
+        print(1)
         return 'mol is None'
     
     props_of_mol = QED.properties(mol)
@@ -77,11 +100,21 @@ def smiles_to_png(smiles):
     
     Возвращает:
     
-    Draw.MolToImage - объект изображения
+    png_name (str) - путь к файлу с изображением
     '''
-    print(Draw.MolToImage(smiles_to_mol(smiles)))
-    return Draw.MolToImage(smiles_to_mol(smiles))
+    
+    png_name = smiles + '.png'
+    print(f'Название файла: {png_name}')
+    print(f'SMILES: {smiles}')
+    if file_availability(png_name, 'mol_png'):
+        print(f'Файл есть в базе, название: {png_name}')
+        return png_name
+    Draw.MolToImage(smiles_to_mol(smiles)).save(f'mol_png/{smiles}.png')
+    print(2)
+    # return Draw.MolToImage(smiles_to_mol(smiles))
+    return png_name
 
 
-# smiles_to_png('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O').save('test.png')
-print(find_props('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O'))
+smiles_to_png('COc1cc(OC)cc(N(CCCN2CCC(N)C2)c2ccc3ncc(-c4cnn(C)c4)nc3c2)c1.Cl')
+print('конец алгоритма')
+# print(find_props('OC[C@H]1OC(n2c(NC3CCCCC3)nc3c(SCc4ccccc4)ncnc32)[C@H](O)[C@@H]1O')).save(f'COc1cc(OC)cc(N(CCCN2CCC(N)C2)c2ccc3ncc(-c4cnn(C)c4)nc3c2)c1.Cl.png')
